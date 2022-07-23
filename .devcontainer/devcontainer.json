@@ -1,0 +1,10 @@
+{
+    "name": "formatos_brasileiros",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "USERNAME": "dev"
+        }
+    },
+    "remoteUser": "dev"
+}
