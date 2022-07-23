@@ -3,7 +3,7 @@ FROM debian:${DEBIAN_RELEASE}
 
 RUN apt-get update \
     && apt-get install --no-install-recommends --yes ca-certificates wget \
-    gpg apt-transport-https sudo bash-completion git
+    gpg openssh-server apt-transport-https sudo bash-completion git
 
 RUN wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub \
     | gpg --dearmor -o /usr/share/keyrings/dart.gpg \
