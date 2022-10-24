@@ -4,7 +4,7 @@ homepage: https://github.com/asakeron/formatos_brasileiros
 description: |
   Collection of data types and utility functions for parsing, validating,
   generating and formating known Brazilian string encoded information
-version: 0.0.0
+version: 0.0.1
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
