@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:formatos_brasileiros/combinators.dart';
 import 'package:meta/meta.dart';
 
 @sealed
@@ -7,13 +8,14 @@ import 'package:meta/meta.dart';
 class Cpf {
   final String _value;
 
-  const Cpf._({required String value}) : _value = value;
+  const Cpf._(this._value);
 
   static Cpf fromString(String cpf) {
     if (!isValid(cpf)) {
-      throw FormatException('cpf is not valid');
+      throw FormatException(
+          'Failed creating Cpf instance due to valid string.');
     }
-    return Cpf._(value: cpf);
+    return Cpf._(cpf);
   }
 
   static Cpf generate([int? seed]) {
@@ -21,7 +23,7 @@ class Cpf {
     final digits = [for (var i = 1; i <= 9; i++) randomGenerator.nextInt(10)];
     final sum1 = ([
               for (var i = 1; i <= 9; i++) digits.elementAt(i - 1) * (11 - i)
-            ].fold(0, _sum) *
+            ].fold(0, (x, y) => x + y) *
             10) %
         11;
     final sum2 = ([
@@ -29,21 +31,17 @@ class Cpf {
                 [...digits, sum1 == 10 || sum1 == 11 ? 0 : sum1]
                         .elementAt(i - 1) *
                     (12 - i)
-            ].fold(0, _sum) *
+            ].fold(0, (x, y) => x + y) *
             10) %
         11;
     final dv1 = sum1 == 10 || sum1 == 11 ? 0 : sum1;
     final dv2 = sum2 == 10 || sum2 == 11 ? 0 : sum2;
 
-    return Cpf._(
-        value: [...digits, dv1, dv2].map((d) => d.toString()).join(''));
+    return Cpf._([...digits, dv1, dv2].map((d) => d.toString()).join(''));
   }
 
-  static int _sum(int x, int y) => x + y;
-
   static bool isValid(String cpf) {
-    final digits =
-        cpf.split('').where((c) => c.codeUnitAt(0) ^ 0x30 <= 9).map(int.parse);
+    final digits = stringAsDigits(cpf);
 
     if (digits.length != 11) {
       return false;
@@ -53,12 +51,12 @@ class Cpf {
     final digitoVerificador2 = digits.elementAt(10);
     final sum1 = ([
               for (var i = 1; i <= 9; i++) digits.elementAt(i - 1) * (11 - i)
-            ].fold(0, _sum) *
+            ].fold(0, (x, y) => x + y) *
             10) %
         11;
     final sum2 = ([
               for (var i = 1; i <= 10; i++) digits.elementAt(i - 1) * (12 - i)
-            ].fold(0, _sum) *
+            ].fold(0, (x, y) => x + y) *
             10) %
         11;
 
@@ -74,7 +72,7 @@ class Cpf {
   String toString() => _value;
 
   @override
-  get hashCode => _value.hashCode;
+  int get hashCode => _value.hashCode;
 
   @override
   bool operator ==(Object other) => other is Cpf && other._value == _value;

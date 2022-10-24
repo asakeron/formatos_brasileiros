@@ -19,7 +19,7 @@ void main() {
   });
 
   test('Cpf instances can be generated from random sources', () {
-    final instance = Cpf.generate();
+    final instance = Cpf.generate(0);
     expect(Cpf.isValid(instance.toString()), equals(true));
   });
 }
